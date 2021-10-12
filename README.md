@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/creat1ve-brsk/cmd-repo/main/README.md?token=ATSPTUQOJWTH44XH2LGZQY3BMWSCM

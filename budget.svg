@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 81 81" style="enable-background:new 0 0 81 81;" xml:space="preserve">
+<link rel="stylesheet" href="svg.css" />
+<g>
+</g>
+<g>
+	<g>
+		<defs>
+			<rect id="SVGID_11_" x="12" y="14" width="64" height="64"/>
+		</defs>
+		<clipPath id="SVGID_12_">
+			<use xlink:href="#SVGID_11_" style="overflow:visible;"/>
+		</clipPath>
+		<g xmlns="http://www.w3.org/2000/svg" class="epbs-logo-st16">
+			<path class="epbs-logo-st17" d="M40.9,64.4c-11.8,0-21.5-9.6-21.5-21.5s9.6-21.5,21.5-21.5c8.9,0,17,5.6,20.1,14l-3.1,1.2     c-2.7-7.1-9.5-11.9-17.1-11.9c-10,0-18.1,8.1-18.1,18.2s8.2,18.2,18.2,18.2c3.8,0,7.5-1.2,10.6-3.4l1.9,2.7     C49.7,63.1,45.4,64.4,40.9,64.4z"/>
+			<path class="epbs-logo-st18" d="M40.9,27.2c2.3,0,4.5,0.5,6.5,1.5l-1.4,3c-1.6-0.7-3.3-1.2-5.2-1.2c-6.7,0-12.2,5.6-12.2,12.4     c0,6.9,5.5,12.4,12.2,12.4v3.3c-8.6,0-15.5-7.1-15.5-15.7C25.4,34.2,32.3,27.2,40.9,27.2z"/>
+			<path class="epbs-logo-st19" d="M63.5,34.5c-3.4-9.2-12.2-15.7-22.6-15.7c-13.3,0-24.1,10.8-24.1,24.1c0,5.8,2,11,5.4,15.2l-3.7,3.1     c-4.1-5-6.5-11.4-6.5-18.3C12,27,25,14,40.9,14c12.5,0,23.1,7.9,27.1,18.9L63.5,34.5z"/>
+		</g>
+	</g>
+</g>
+</svg>

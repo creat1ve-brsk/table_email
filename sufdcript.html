@@ -1,0 +1,429 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>
+<html>
+
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+    <title>Сервер защиты</title>
+    <meta http-equiv='description' content=''>
+    <script>
+        function init_action() {
+            document.forms[0].action = 'http://sufd.s2700w03.ufk27.roskazna.local:28081/default.zul';
+        }
+    </script>
+    <script>
+        var utf8 = {
+            toUTF8: function (str) {
+                var result = '';
+                for (var i = 0; i < str.length; i += 1) {
+                    var code = str.charCodeAt(i);
+                    if (code < 128) {
+                        result += String.fromCharCode(code);
+                    } else if ((code > 127) && (code < 2048)) {
+                        result += String.fromCharCode(((code & 0x7c0) >> 6) | 0xC0);
+                        result += String.fromCharCode((code & 0x03f) | 0x80);
+                    } else {
+                        result += String.fromCharCode((code >> 12) | 224);
+                        result += String.fromCharCode(((code >> 6) & 63) | 128);
+                        result += String.fromCharCode((code & 63) | 128);
+                    }
+                }
+                return result;
+            },
+            fromUTF8: function (utfStr) {
+                var result = '';
+                var i = 0;
+                var c1 = 0;
+                var c2 = 0;
+                var c3 = 0;
+                while (i < utfStr.length) {
+                    c1 = utfStr.charCodeAt(i);
+                    if (c1 < 128) {
+                        result += String.fromCharCode(c1);
+                        i += 1;
+                    } else if ((c1 > 191) && (c1 < 224)) {
+                        c2 = utfStr.charCodeAt(i + 1);
+                        result += String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+                        i += 2;
+                    } else {
+                        c2 = utfStr.charCodeAt(i + 1);
+                        c3 = utfStr.charCodeAt(i + 2);
+                        result += String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                        i += 3;
+                    }
+                }
+                return result;
+            }
+        };
+    </script>
+    <script>
+        function Base64Encoder() {
+            this.base64Str = null;
+            this.base64Count = 0;
+        }
+        Base64Encoder.prototype.END_OF_INPUT = -1;
+        Base64Encoder.prototype.base64Chars = new Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2',
+            '3', '4', '5', '6', '7', '8', '9', '+', '/');
+        Base64Encoder.prototype.next = function () {
+            if (!this.base64Str) {
+                return this.END_OF_INPUT;
+            }
+            if (this.base64Count >= this.base64Str.length) {
+                return this.END_OF_INPUT;
+            }
+            var c = this.base64Str[this.base64Count] & 0xFF;
+            this.base64Count += 1;
+            return c;
+        };
+        Base64Encoder.prototype.encode = function (str) {
+            this.base64Str = str;
+            this.base64Count = 0;
+            var result = '';
+            var inBuffer = new Array(3);
+            var lineCount = 0;
+            var done = false;
+            while (!done && (inBuffer[0] = this.next()) != this.END_OF_INPUT) {
+                inBuffer[1] = this.next();
+                inBuffer[2] = this.next();
+                result += (this.base64Chars[inBuffer[0] >> 2]);
+                if (inBuffer[1] != this.END_OF_INPUT) {
+                    result += (this.base64Chars[((inBuffer[0] << 4) & 48) | (inBuffer[1] >> 4)]);
+                    if (inBuffer[2] != this.END_OF_INPUT) {
+                        result += (this.base64Chars[((inBuffer[1] << 2) & 60) | (inBuffer[2] >> 6)]);
+                        result += (this.base64Chars[inBuffer[2] & 63]);
+                    } else {
+                        result += (this.base64Chars[((inBuffer[1] << 2) & 60)]);
+                        result += ('=');
+                        done = true;
+                    }
+                } else {
+                    result += (this.base64Chars[((inBuffer[0] << 4) & 48)]);
+                    result += ('=');
+                    result += ('=');
+                    done = true;
+                }
+                lineCount += 4;
+                if (lineCount >= 76) {
+                    result += ('\n');
+                    lineCount = 0;
+                }
+            }
+            return result;
+        };
+    </script>
+    <script>
+        function Sha256() {
+            this.ihash = null;
+            this.count = 0;
+            this.buffer = null;
+        }
+        Sha256.prototype.K256 = new Array(1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993,
+            2453635748, 2870763221, 3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206,
+            2614888103, 3248222580, 3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692,
+            1996064986, 2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993,
+            338241895, 666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037,
+            2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344,
+            430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779, 1955562222,
+            2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298);
+        Sha256.prototype.rotateRight = function (n, x) {
+            return ((x >>> n) | (x << (32 - n)));
+        };
+        Sha256.prototype.choice = function (x, y, z) {
+            return ((x & y) ^ (~x & z));
+        };
+        Sha256.prototype.majority = function (x, y, z) {
+            return ((x & y) ^ (x & z) ^ (y & z));
+        };
+        Sha256.prototype.Sigma0 = function (x) {
+            return (this.rotateRight(2, x) ^ this.rotateRight(13, x) ^ this.rotateRight(22, x));
+        };
+        Sha256.prototype.Sigma1 = function (x) {
+            return (this.rotateRight(6, x) ^ this.rotateRight(11, x) ^ this.rotateRight(25, x));
+        };
+        Sha256.prototype.sigma0 = function (x) {
+            return (this.rotateRight(7, x) ^ this.rotateRight(18, x) ^ (x >>> 3));
+        };
+        Sha256.prototype.sigma1 = function (x) {
+            return (this.rotateRight(17, x) ^ this.rotateRight(19, x) ^ (x >>> 10));
+        };
+        Sha256.prototype.expand = function (W, j) {
+            return (W[j & 15] += this.sigma1(W[(j + 14) & 15]) + W[(j + 9) & 15] + this.sigma0(W[(j + 1) & 15]));
+        };
+        Sha256.prototype.add = function (x, y) {
+            var lsw = (x & 65535) + (y & 65535);
+            var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+            return (msw << 16) | (lsw & 65535);
+        };
+        Sha256.prototype.init = function () {
+            this.ihash = new Array(8);
+            this.count = new Array(2);
+            this.buffer = new Array(64);
+            this.count[0] = 0;
+            this.count[1] = 0;
+            this.ihash[0] = 1779033703;
+            this.ihash[1] = 3144134277;
+            this.ihash[2] = 1013904242;
+            this.ihash[3] = 2773480762;
+            this.ihash[4] = 1359893119;
+            this.ihash[5] = 2600822924;
+            this.ihash[6] = 528734635;
+            this.ihash[7] = 1541459225;
+        };
+        Sha256.prototype.transform = function () {
+            var a, b, c, d, e, f, g, h, T1, T2;
+            var W = new Array(16);
+            a = this.ihash[0];
+            b = this.ihash[1];
+            c = this.ihash[2];
+            d = this.ihash[3];
+            e = this.ihash[4];
+            f = this.ihash[5];
+            g = this.ihash[6];
+            h = this.ihash[7];
+            for (var i = 0; i < 16; i += 1) {
+                W[i] = ((this.buffer[(i << 2) + 3]) | (this.buffer[(i << 2) + 2] << 8) | (this.buffer[(i << 2) +
+                    1] << 16) | (this.buffer[i << 2] << 24));
+            }
+            for (var j = 0; j < 64; j += 1) {
+                T1 = h + this.Sigma1(e) + this.choice(e, f, g) + this.K256[j];
+                if (j < 16) {
+                    T1 += W[j];
+                } else {
+                    T1 += this.expand(W, j);
+                }
+                T2 = this.Sigma0(a) + this.majority(a, b, c);
+                h = g;
+                g = f;
+                f = e;
+                e = this.add(d, T1);
+                d = c;
+                c = b;
+                b = a;
+                a = this.add(T1, T2);
+            }
+            this.ihash[0] += a;
+            this.ihash[1] += b;
+            this.ihash[2] += c;
+            this.ihash[3] += d;
+            this.ihash[4] += e;
+            this.ihash[5] += f;
+            this.ihash[6] += g;
+            this.ihash[7] += h;
+        };
+        Sha256.prototype.update = function (data, inputLen) {
+            var i, index, curpos = 0;
+            index = ((this.count[0] >> 3) & 63);
+            var remainder = (inputLen & 63);
+            if ((this.count[0] += (inputLen << 3)) < (inputLen << 3)) {
+                this.count[1] += 1;
+            }
+            this.count[1] += (inputLen >> 29);
+            for (i = 0; i + 63 < inputLen; i += 64) {
+                for (var j = index; j < 64; j += 1) {
+                    this.buffer[j] = data.charCodeAt(curpos++);
+                }
+                this.transform();
+                index = 0;
+            }
+            for (j = 0; j < remainder; j++) {
+                this.buffer[j] = data.charCodeAt(curpos++);
+            }
+        };
+        Sha256.prototype.finalize = function () {
+            var index = ((this.count[0] >> 3) & 63);
+            this.buffer[index++] = 128;
+            var i = 0;
+            if (index <= 56) {
+                for (i = index; i < 56; i += 1) {
+                    this.buffer[i] = 0;
+                }
+            } else {
+                for (i = index; i < 64; i += 1) {
+                    this.buffer[i] = 0;
+                }
+                this.transform();
+                for (i = 0; i < 56; i += 1) {
+                    this.buffer[i] = 0;
+                }
+            }
+            this.buffer[56] = (this.count[1] >>> 24) & 255;
+            this.buffer[57] = (this.count[1] >>> 16) & 255;
+            this.buffer[58] = (this.count[1] >>> 8) & 255;
+            this.buffer[59] = this.count[1] & 255;
+            this.buffer[60] = (this.count[0] >>> 24) & 255;
+            this.buffer[61] = (this.count[0] >>> 16) & 255;
+            this.buffer[62] = (this.count[0] >>> 8) & 255;
+            this.buffer[63] = this.count[0] & 255;
+            this.transform();
+        };
+        Sha256.prototype.unpackWord = function (word, arr, outOff) {
+            arr[outOff] = (word >>> 24) & 255;
+            arr[outOff + 1] = (word >>> 16) & 255;
+            arr[outOff + 2] = (word >>> 8) & 255;
+            arr[outOff + 3] = word & 255;
+        };
+        Sha256.prototype.encode_bytes = function () {
+            var j = 0;
+            var output = new Array(32);
+            for (var i = 0; i < 8; i++) {
+                output[j++] = ((this.ihash[i] >>> 24) & 255);
+                output[j++] = ((this.ihash[i] >>> 16) & 255);
+                output[j++] = ((this.ihash[i] >>> 8) & 255);
+                output[j++] = (this.ihash[i] & 255);
+            }
+            return output;
+        };
+        Sha256.prototype.digest = function (data) {
+            this.init();
+            this.update(data, data.length);
+            this.finalize();
+            var out = new Array();
+            this.unpackWord(this.ihash[0], out, 0);
+            this.unpackWord(this.ihash[1], out, 4);
+            this.unpackWord(this.ihash[2], out, 8);
+            this.unpackWord(this.ihash[3], out, 12);
+            this.unpackWord(this.ihash[4], out, 16);
+            this.unpackWord(this.ihash[5], out, 20);
+            this.unpackWord(this.ihash[6], out, 24);
+            this.unpackWord(this.ihash[7], out, 28);
+            return out;
+        };
+    </script>
+    <script>
+        function OnClick() {
+            var visible_field = document.getElementById('visible_user_field');
+            var hidden_field = document.getElementById('hidden_user_field');
+            hidden_field.value = visible_field.value;
+            visible_field = document.getElementById('visible_password_field');
+            hidden_field = document.getElementById('hidden_password_field');
+            var digester = new Sha256();
+            var encoder = new Base64Encoder();
+            hidden_field.value = encoder.encode(digester.digest(utf8.toUTF8(visible_field.value)));
+            document.forms[0].submit();
+            document.getElementById('visible_password_field').value = '';
+            document.getElementById('hidden_password_field').value = '';
+        }
+
+        function show_hide(n) {
+            var headers = 6;
+            var panelDiv;
+            if (!(0 <= n && n < headers)) {
+                n = 0;
+            }
+            for (var i = 0; i < headers; i++) {
+                panelDiv = document.getElementById('header_' + i);
+                if (i == n) {
+                    panelDiv.style.display = 'block';
+                } else {
+                    panelDiv.style.display = 'none';
+                }
+            }
+        }
+    </script>
+    <script>
+        function Cipher() {}
+        Cipher.prototype.encrypt = function (msg, keys) {
+            var result;
+            var strResult = '';
+            if (msg != null && keys != null) {
+                result = new Array(msg.length * 2);
+                for (i = 0; i < msg.length; i++) {
+                    var b = msg.charCodeAt(i);
+                    var val = (b >>> 4) & 0x0F;
+                    var v = val;
+                    for (j = 0; j < keys[0] - 1; j++) {
+                        v = v * val;
+                    }
+                    val = (v % keys[1]);
+                    result[2 * i] = val;
+                    val = b & 0x0F;
+                    v = val;
+                    for (j = 0; j < keys[0] - 1; j++) {
+                        v = v * val;
+                    }
+                    val = v % keys[1];
+                    result[2 * i + 1] = val;
+                }
+                for (i = 0; i < result.length; i++) {
+                    strResult += result[i];
+                    strResult += ',';
+                }
+                return strResult;
+            }
+            return null;
+        }
+    </script>
+</head>
+
+<body style='background-color: white;' onload='init();'><input id='visible_user_field' type='hidden' name='userName'
+           type='text' tabindex='1' autocomplete='off' value='veprincevalv1'><input id='visible_password_field'
+           type='hidden' style='width: 100%' name='password' type='password' tabindex='2' autocomplete='off'
+           value='qwerty22111!212'><input name='loginButton' type='hidden' id='loginButton' value='Вход в систему'
+           type='button' onclick='OnClick()'>
+    <form method='post' enctype='application/x-www-form-urlencoded' name='loginForm' id='loginForm'
+          action='http://s5400w03.ufk54.roskazna.local:28081/sso-proxy-login/start/'> <input id='hidden_user_field'
+               name='sso_param_login' size='20' type='hidden' autocomplete='off'> <input id='hidden_password_field'
+               name='sso_param_password' size='80' type='hidden' autocomplete='off'></form>
+    <script type='text/javascript'>
+        function init() {
+            var num = 0;
+            var href = document.location.href;
+            document.getElementById('visible_user_field').focus();
+            var pos = href.lastIndexOf('?');
+            if (-1 != pos) {
+                str = href.substring(pos + 1);
+                pos = str.indexOf('&');
+                if (-1 != pos) {
+                    num = str.substring(1, pos - 1);
+                    var login = str.substring(pos + 1);
+                    if (login != null) {
+                        document.getElementById('visible_user_field').value = login;
+                        document.getElementById('visible_password_field').focus();
+                    }
+                } else {
+                    num = str;
+                }
+            }
+            show_hide(num);
+            document.getElementById('visible_user_field').onkeypress = onUserFieldKeyPress;
+            document.getElementById('visible_password_field').onkeypress = onPasswordFiledKeyPress;
+            init_action();
+        }
+        document.getElementById('loginButton').click();
+
+        function isEnter(e) {
+            var keynum;
+            if (!e) {
+                e = window.event;
+            }
+            if (window.event) {
+                keynum = e.keyCode
+            } else if (e.which) {
+                keynum = e.which
+            }
+            if (keynum != 13 || e.shiftKey || e.altKey || e.ctrlKey) {
+                return false;
+            }
+            return true;
+        }
+
+        function onUserFieldKeyPress(e) {
+            if (isEnter(e)) {
+                document.getElementById('visible_password_field').focus();
+            } else {
+                return true;
+            }
+        }
+
+        function onPasswordFiledKeyPress(e) {
+            if (isEnter(e)) {
+                document.getElementById('loginButton').click();
+            } else {
+                return true;
+            }
+        }
+    </script>
+</body>
+
+</html>

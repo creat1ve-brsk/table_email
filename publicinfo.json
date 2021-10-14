@@ -1,0 +1,254 @@
+{
+    "event": {
+        "id": "1634213117188.8835",
+        "route": "profile",
+        "query": {
+            "public_id": "musienko-no"
+        },
+        "search": "public_id=musienko-no",
+        "_time": 141,
+        "cookies": {
+            "yandex_login": "creat1ve.brsk.two"
+        }
+    },
+    "env": {
+        "flags": {
+            "desktop_card_direct_query": 2,
+            "desktop_suggest_custom_url": "/suggest-collections/suggest-collections",
+            "collections_collection_hidden_comments": true,
+            "collections_aab_cookie": "cldummyaab",
+            "collections_survey_text": "Помогите нам сделать Коллекции лучше, пройдите простой опрос",
+            "collections_survey_link": "https://forms.yandex.ru/surveys/10021482.fc408eadc694f1d15b546ac897034644f171b4d6/",
+            "undefined": 4000,
+            "feed_api_timeout": 800,
+            "critical_css_disable": false,
+            "metrika_webvisor": false,
+            "disable_csp": false,
+            "disable_images_csp": false,
+            "unique_urls": true,
+            "collections_disable_xframe_options": false,
+            "collections_disable_robots_access": false,
+            "collections_comments_token": "29da5f6b-463d-48b8-94fe-1accbf87884b",
+            "collections_image_session_signal": 1,
+            "collections_csp_header": true,
+            "collections_counters_l7": true,
+            "collections_card_owner_id": true,
+            "collections_merchants_filter": true,
+            "collections_market_link": true,
+            "collections_display_image_cards_as_goods": true,
+            "collections_boards_carousel_hidden": true
+        },
+        "ua": {
+            "isMobile": false,
+            "isTouch": false,
+            "isBrowser": true,
+            "BrowserEngine": "WebKit",
+            "BrowserEngineVersion": "537.36",
+            "BrowserBase": "Chromium",
+            "BrowserBaseVersion": "87.0.4280.66",
+            "BrowserName": "Chrome",
+            "BrowserVersion": "87.0.4280.66",
+            "OSFamily": "Windows",
+            "OSName": "Windows 10",
+            "OSVersion": "10.0",
+            "x64": true
+        },
+        "testBoxes": "151171,0,8;406063,0,0",
+        "yandexInternal": false,
+        "tld": "ru",
+        "isYandexApp": false,
+        "isTurboApp": false,
+        "timeDelta": 0,
+        "language": "ru",
+        "host": "yandex.ru",
+        "logos": [],
+        "query": {},
+        "regionId": 191,
+        "isTablet": false,
+        "isEmbed": false,
+        "isLegacy": false,
+        "isBrowserApp": false,
+        "isBrowserFavorites": false,
+        "isNativeAppPage": false,
+        "isYandexBroWebView": false,
+        "isYandexRecent": false,
+        "hideHeader": false,
+        "showHeader": false,
+        "requestId": "1634213117056615-11544004454457550312-vla1-4108-vla-l7-balancer-8080-BAL-1gqbbh0-0",
+        "windowWidth": 1422,
+        "windowHeight": 978,
+        "pixelRatio": 1,
+        "loginUrl": "https://passport.yandex.ru/auth?origin=collections&amp;retpath=https%3A%2F%2Fyandex.ru",
+        "logoutUrl": "https://passport.yandex.ru/passport?mode=logout&amp;yu=9681136071633589646&amp;retpath=https%3A%2F%2Fyandex.ru&amp;from=collections",
+        "origin": "https://yandex.ru",
+        "cookies": {
+            "yandexuid": "9681136071633589646",
+            "yp": "1636213291.ygu.1#1636804989.los.1#1636804989.losc.0#1665675464.p_sw.1634139463#1948971033.udn.cDpjcmVhdDF2ZS5icnNrLnR3bw%3D%3D#1634814856.mcv.0#1634814856.mct.null#1634814856.mcl.1sqbm02#1634814856.szm.1:1280x1024:1280x881",
+            "font_loaded": "YSv1"
+        },
+        "contextNonce": "O6UYrX9OEtWjLyjXn/jA/w==",
+        "header3Nonce": "e0OBzDdgZF4j0+zJfe93iA==",
+        "manifestNonce": "ffKDoa09wg9XOijvmHuQUA==",
+        "platform": 2,
+        "expBoxesCrypted": "cZgJ9495uKXSQBe6gKPuHsdFavcg82vO"
+    },
+    "user": {
+        "id": "5c02cb68d87d1100371b7a4c",
+        "_url": "/collections/api/user",
+        "_query": {}
+    },
+    "companies": {
+        "_url": "/collections/api/user/companies/",
+        "_query": {},
+        "_headers": {},
+        "_time": 0,
+        "results": []
+    },
+    "favoritesCards": {
+        "_url": "/collections/api/favorites/cards",
+        "_query": {
+            "page_size": 24,
+            "sort": "-service.created_at"
+        },
+        "_headers": {},
+        "_time": 82,
+        "results": [],
+        "count": 0,
+        "next": null,
+        "previous": null
+    },
+    "profileUser": {
+        "id": "60754de3f9b4c2a356bade96",
+        "_url": "/collections/api/users/musienko-no",
+        "_query": {}
+    },
+    "userCards": {
+        "_url": "/collections/api/cards",
+        "_query": {
+            "owner.public_id": "musienko-no",
+            "sort": "-service.created_at",
+            "page_size": 24
+        },
+        "_headers": {},
+        "_time": 129,
+        "results": [],
+        "count": 100000,
+        "next": null,
+        "previous": null
+    },
+    "userBoards": {
+        "_url": "/collections/api/boards",
+        "_query": {
+            "saveable_for_user": "musienko-no",
+            "parent": "null",
+            "sort": "-service.updated_at",
+            "previews_count": 3,
+            "page_size": 12
+        },
+        "_headers": {},
+        "_time": 140,
+        "results": [],
+        "count": 0,
+        "next": null,
+        "previous": null
+    },
+    "entities": {
+        "users": {
+            "5c02cb68d87d1100371b7a4c": {
+                "_url": "/collections/api/user",
+                "_query": {},
+                "public_id": "9raqawt29pde40t3np8vpuaejm",
+                "language": "ru",
+                "sex": "m",
+                "is_forbid": false,
+                "uid": 268339286,
+                "stats": {
+                    "organization_cards": 0,
+                    "boards": 0,
+                    "link_cards": 0,
+                    "own_boards_likes": 0,
+                    "product_cards": 0,
+                    "offer_cards": 0,
+                    "market_cards": 0,
+                    "collab_boards": 0,
+                    "subscribers": 0,
+                    "news_cards": 0,
+                    "image_cards": 0,
+                    "own_likes": 0,
+                    "user_subscriptions": 0,
+                    "likes": 0,
+                    "video_cards": 0,
+                    "book_cards": 0,
+                    "ads_cards": 0,
+                    "subscriptions_on_self_boards": 0,
+                    "geo_cards": 0,
+                    "film_cards": 0,
+                    "companies": 0,
+                    "board_subscriptions": 0,
+                    "game_cards": 0,
+                    "specialist_cards": 0,
+                    "goods_cards": 0,
+                    "series_cards": 0,
+                    "cards": 0,
+                    "music_cards": 0,
+                    "boards_likes": 0
+                },
+                "yt_alias": null,
+                "preferences": {
+                    "general": {
+                        "huawei_banner_shown": 2,
+                        "board_comments_tooltip": -1,
+                        "welcome_popup_2021": "faq"
+                    }
+                },
+                "id": "5c02cb68d87d1100371b7a4c",
+                "display_name": "Vlad K",
+                "is_passport": true,
+                "compilations": [],
+                "default_avatar_id": "0/0-0",
+                "is_restricted": false,
+                "url": "https://internal.collections.yandex.ru/collections/user/9raqawt29pde40t3np8vpuaejm/",
+                "is_km": false,
+                "is_business": false,
+                "_time": 58
+            },
+            "60754de3f9b4c2a356bade96": {
+                "_url": "/collections/api/users/musienko-no",
+                "_query": {},
+                "_headers": {},
+                "_time": 127,
+                "stats": {
+                    "likes": 0,
+                    "subscriptions_on_self_boards": 0,
+                    "own_likes": 0,
+                    "collab_boards": 0,
+                    "cards": 0,
+                    "user_subscriptions": 0,
+                    "boards_likes": 0,
+                    "boards": 0,
+                    "subscribers": 0,
+                    "board_subscriptions": 0,
+                    "own_boards_likes": 0
+                },
+                "company_info": null,
+                "id": "60754de3f9b4c2a356bade96",
+                "company_metrics": null,
+                "sex": "m",
+                "is_forbid": false,
+                "is_passport": true,
+                "url": "https://internal.collections.yandex.ru/collections/user/41eutb6ux8z0dccyv0y2rbnawr/",
+                "description": null,
+                "public_id": "41eutb6ux8z0dccyv0y2rbnawr",
+                "is_restricted": false,
+                "cover_info": null,
+                "phone_id": null,
+                "display_name": "Никита Мусиенко",
+                "default_avatar_id": "28053/prqGWYuplSVWmQojgoTPLol8rBs-1",
+                "is_km": false,
+                "is_business": false,
+                "is_subscribed": false
+            }
+        },
+        "cards": {}
+    }
+}
